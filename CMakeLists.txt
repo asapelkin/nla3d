@@ -124,6 +124,35 @@ install (TARGETS nla3d
 install(DIRECTORY "src/" DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/nla3d"
           FILES_MATCHING PATTERN "*.h")
 
+# generate python wrapper by SWIG. `swig` rule to generate wrapper sources, `nla3d_py` - to build library
+FIND_PACKAGE(PYTHONLIBS)
+FIND_PROGRAM(SWIG_EXECUTABLE swig)
+IF(PYTHONLIBS_FOUND AND SWIG_EXECUTABLE)
+    MAKE_DIRECTORY(${CMAKE_BINARY_DIR}/python)
+    ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_BINARY_DIR}/python/nla3d_wrapper.cxx
+                       COMMAND ${SWIG_EXECUTABLE} -python -c++ -I${CMAKE_SOURCE_DIR}/src
+                       -I${CMAKE_SOURCE_DIR}/src/lib -outdir ${CMAKE_BINARY_DIR}/python
+                       -o python/nla3d_wrapper.cxx ${CMAKE_SOURCE_DIR}/python/nla3d.swg
+                       DEPENDS ${CMAKE_SOURCE_DIR}/python/nla3d.swg)
+
+    ADD_CUSTOM_TARGET(swig DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/python/nla3d_wrapper.cxx)
+
+    INCLUDE_DIRECTORIES(${PYTHON_INCLUDE_DIRS})
+    LINK_DIRECTORIES(${PYTHON_LIBRARIES})
+
+    ADD_LIBRARY(nla3d_py SHARED EXCLUDE_FROM_ALL "${CMAKE_BINARY_DIR}/python/nla3d_wrapper.cxx")
+    TARGET_LINK_LIBRARIES(nla3d_py "-Wl,-rpath,${PYTHON_LIBRARIES}" "-lpython2.7" math nla3d_static_lib)
+    SET_TARGET_PROPERTIES(nla3d_py PROPERTIES OUTPUT_NAME "_nla3d"
+                                              SUFFIX ".so"
+                                              PREFIX ""
+                                              LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/python")
+    ADD_DEPENDENCIES(nla3d_py swig)
+
+    # run python tests with `checkpy`
+    ADD_CUSTOM_TARGET(checkpy COMMAND ${CMAKE_CTEST_COMMAND} -L PYTHON --output-on-failure)
+    ADD_DEPENDENCIES(checkpy nla3d_py)
+ENDIF()
+
 # taken from stackoverflow: How to copy DLL files into the same folder as the executable using CMake
 # add_custom_command(TARGET nla3d POST_BUILD
 #  COMMAND ${CMAKE_COMMAND} -E copy_if_different
