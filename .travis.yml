@@ -9,6 +9,7 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - g++-4.9
+            - swig3.0
       env: COMPILER=g++-4.9
       dist: trusty
 
@@ -20,6 +21,7 @@ matrix:
             - llvm-toolchain-precise-3.6
           packages:
             - clang-3.6
+            - swig3.0
       env: COMPILER=clang++-3.6
       dist: trusty
 
@@ -28,3 +30,4 @@ install: true
 script:
  - mkdir build && cd build && cmake -DCMAKE_CXX_COMPILER=$COMPILER -DCMAKE_BUILD_TYPE=Release ..
  - MALLOC_CHECK_=0 make -j 2 && make check -j 2
+ - MALLOC_CHECK_=0 make checkpy -j 2

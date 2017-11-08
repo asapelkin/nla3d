@@ -4,10 +4,10 @@ file (GLOB NLA3D_LIB_SOURCES "*.cpp" "materials/*.cpp" "elements/*.cpp")
 
 if (UNIX)
     add_library(nla3d_lib SHARED ${NLA3D_LIB_SOURCES})
-    add_library(nla3d_static_lib STATIC EXCLUDE_FROM_ALL ${NLA3D_LIB_SOURCES})
 else()
     add_library(nla3d_lib STATIC ${NLA3D_LIB_SOURCES})
 endif()
+add_library(nla3d_static_lib STATIC EXCLUDE_FROM_ALL ${NLA3D_LIB_SOURCES})
 
 target_link_libraries(nla3d_lib math ${MKL_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
 
