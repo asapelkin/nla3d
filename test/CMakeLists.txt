@@ -143,3 +143,16 @@ add_test(NAME 3d_damper COMMAND nla3d ${PROJECT_SOURCE_DIR}/test/3d_damper/model
   -reaction TOP_SIDE UY -threshold 3.0 -element SOLID81)
 set_tests_properties(3d_damper PROPERTIES LABELS "BENCH")
  
+# Python tests
+
+set (TEST_NAME "mat_math_py")
+add_test(NAME ${TEST_NAME} COMMAND python ${PROJECT_SOURCE_DIR}/test/mat_math.py)
+SET_TESTS_PROPERTIES(${TEST_NAME} PROPERTIES
+                     ENVIRONMENT "PYTHONPATH=${CMAKE_BINARY_DIR}/python"
+                     LABELS "PYTHON")
+
+set (TEST_NAME "truss_py")
+add_test(NAME ${TEST_NAME} COMMAND python ${PROJECT_SOURCE_DIR}/test/truss.py)
+SET_TESTS_PROPERTIES(${TEST_NAME} PROPERTIES
+                     ENVIRONMENT "PYTHONPATH=${CMAKE_BINARY_DIR}/python"
+                     LABELS "PYTHON")
