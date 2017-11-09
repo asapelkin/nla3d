@@ -156,3 +156,12 @@ add_test(NAME ${TEST_NAME} COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/te
 SET_TESTS_PROPERTIES(${TEST_NAME} PROPERTIES
                      ENVIRONMENT "PYTHONPATH=${CMAKE_BINARY_DIR}/python"
                      LABELS "PYTHON")
+
+SET(TEST_NAME "TETRA0_test_py")
+ADD_TEST(NAME ${TEST_NAME} COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/test/TETRA0_test.py
+                                   ${CMAKE_SOURCE_DIR}/test/TETRA0/tetra.cdb
+                                   ${CMAKE_SOURCE_DIR}/test/TETRA0/disp.res
+                                   ${CMAKE_SOURCE_DIR}/test/TETRA0/stress.res)
+SET_TESTS_PROPERTIES(${TEST_NAME} PROPERTIES
+                     ENVIRONMENT "PYTHONPATH=${CMAKE_BINARY_DIR}/python"
+                     LABELS "PYTHON")

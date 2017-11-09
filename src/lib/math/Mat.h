@@ -54,7 +54,7 @@ public:
 	Mat<dimM-1,dimN-1> cross_cut (uint16 cuti, uint16 cutj);
     std::string toString ();
 	double* ptr ();
-	bool compare (const Mat<dimM,dimN> &B, double eps = 0.00001);
+	bool compare (const Mat<dimM,dimN> &B, double eps = 1.0e-5);
 	void simple_read (std::istream &st);
 	//friend функции
 	template <uint16 dimM1, uint16 dimN1> 
@@ -609,7 +609,7 @@ public:
 	}
   Mat<dimM, dimM> toMat();
 	void simple_read (std::istream &st);
-	bool compare (MatSym<dimM> &B, double eps = 0.00001);
+	bool compare (MatSym<dimM> &B, double eps = 1.0e-5);
 	MatSym& operator+= (const MatSym &op);
     uint16 dM() const {
       return dimM;
