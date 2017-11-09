@@ -5,11 +5,14 @@
 #include "math/Mat.h"
 #include "FEStorage.h"
 #include "FESolver.h"
+#include "FEReaders.h"
 #include "elements/TRUSS3.h"
 using namespace nla3d;
 %}
 
 %include "std_string.i"
+%include "std_vector.i"
+%include "std_map.i"
 
 %rename($ignore, %$isfunction) ""; // ignore all functions
 %rename($ignore, %$isclass) ""; // ignore all classes
@@ -273,7 +276,36 @@ MATSYM_EXTEND(3)
       $self->getNodeNumber(num) = node;
     }
 }
-%include "elements/TRUSS3.h"
 
 %include "Node.h"
 %include "Dof.h"
+%include "Mpc.h"
+
+// use only MeshData class and readCdbFile func
+%rename($ignore, %$isfunction) "";
+%rename($ignore, %$isclass) "";
+%rename("%s") MeshData;
+%rename("%s") MeshData::getDegeneratedCells;
+%rename("%s") MeshData::getCellsByAttribute;
+%rename("%s") MeshData::clear;
+%rename("%s") MeshData::compressNumbers;
+%rename("%s") readCdbFile;
+%include "FEReaders.h"
+%rename("%s", %$isfunction) "";
+%rename("%s", %$isclass) "";
+namespace std {
+   %template(vectori) vector<uint32>;
+   %template(vectord) vector<double>;
+   %template(vectors) vector<std::string>;
+   %template(vectorv3) vector<nla3d::math::Vec<3>>;
+   %template(vectorvectori) std::vector<std::vector<uint32>>;
+   %template(vectorloadbc) std::vector<nla3d::loadBC>;
+   %template(vectorfixbc) std::vector<nla3d::fixBC>;
+   %template(vectormpcp) std::vector<Mpc*>;
+
+   %template(map_s_fecomp) std::map<std::string, FEComponent>;
+   %template(map_s_vectord) std::map<std::string, std::vector<double>>;
+   %template(map_s_vectori) std::map<std::string, std::vector<uint32>>;
+   %template(map_s_vectors) std::map<std::string, std::vector<std::string>>;
+};
+

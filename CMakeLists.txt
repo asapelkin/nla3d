@@ -146,7 +146,7 @@ IF(PYTHONLIBS_FOUND AND SWIG_EXECUTABLE)
     INCLUDE_DIRECTORIES(${PYTHON_INCLUDE_DIRS})
     LINK_DIRECTORIES(${PYTHON_LIBRARIES})
 
-    ADD_LIBRARY(nla3d_py SHARED EXCLUDE_FROM_ALL "${CMAKE_BINARY_DIR}/python/nla3d_wrapper.cxx")
+    ADD_LIBRARY(nla3d_py SHARED EXCLUDE_FROM_ALL "${CMAKE_BINARY_DIR}/python/nla3d_wrapper.cxx" "src/FEReaders.cpp")
     TARGET_LINK_LIBRARIES(nla3d_py ${PYTHON_LIBRARIES} nla3d_static_lib math)
     SET_TARGET_PROPERTIES(nla3d_py PROPERTIES OUTPUT_NAME "_nla3d"
                                               PREFIX ""
