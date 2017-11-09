@@ -6,7 +6,9 @@
 #include "FEStorage.h"
 #include "FESolver.h"
 #include "FEReaders.h"
+#include "elements/query.h"
 #include "elements/TRUSS3.h"
+#include "elements/TETRA0.h"
 using namespace nla3d;
 %}
 
@@ -16,6 +18,7 @@ using namespace nla3d;
 
 %rename($ignore, %$isfunction) ""; // ignore all functions
 %rename($ignore, %$isclass) ""; // ignore all classes
+%ignore "UNDEFINED";
 %include "sys.h"
 %rename("%s", %$isfunction) "";
 %rename("%s", %$isclass) "";
@@ -26,6 +29,10 @@ using namespace nla3d;
     $action
   }
   catch(std::range_error& e) {
+      PyErr_SetString(PyExc_IndexError, e.what());
+      SWIG_fail;
+  }
+  catch(std::bad_cast& e) {
       PyErr_SetString(PyExc_IndexError, e.what());
       SWIG_fail;
   }
@@ -250,9 +257,20 @@ MATSYM_EXTEND(3)
         return self._addElement(el)
   }
 
+  nla3d::ElementTETRA0& getElementTETRA0(uint32 _en) {
+    return $self->getElement<nla3d::ElementTETRA0>(_en);
+  }
+
+  nla3d::ElementTRUSS3& getElementTRUSS3(uint32 _en) {
+    return $self->getElement<nla3d::ElementTRUSS3>(_en);
+  }
 }
 
 %include "FESolver.h"
+
+%ignore "UNDEF";
+%ignore "LAST";
+%include "elements/query.h"
 
 %ignore nla3d::Element::getNodeNumber;
 %ignore nla3d::Element::assembleK;
@@ -308,4 +326,7 @@ namespace std {
    %template(map_s_vectori) std::map<std::string, std::vector<uint32>>;
    %template(map_s_vectors) std::map<std::string, std::vector<std::string>>;
 };
+
+%include "elements/TRUSS3.h"
+%include "elements/TETRA0.h"
 
