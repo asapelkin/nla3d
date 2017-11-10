@@ -4,6 +4,8 @@
 #include "math/Vec.h"
 #include "math/Mat.h"
 #include "FEStorage.h"
+#include "PostProcessor.h"
+#include "VtkProcessor.h"
 #include "FESolver.h"
 #include "FEReaders.h"
 #include "elements/query.h"
@@ -266,7 +268,20 @@ MATSYM_EXTEND(3)
   }
 }
 
+%include "PostProcessor.h"
+
+%ignore nla3d::VtkProcessor::registerResults;
+%include "VtkProcessor.h"
+
+%rename(_addPostProcessor) nla3d::FESolver::addPostProcessor;
 %include "FESolver.h"
+%extend nla3d::FESolver {
+  %pythoncode {
+    def addPostProcessor(self, postprocessor):
+      postprocessor.thisown = 0 # pass ownership to nla3d::FESolver
+      return self._addPostProcessor(postprocessor)
+  }
+}
 
 %ignore "UNDEF";
 %ignore "LAST";
