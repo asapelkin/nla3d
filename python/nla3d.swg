@@ -11,6 +11,7 @@
 #include "elements/query.h"
 #include "elements/TRUSS3.h"
 #include "elements/TETRA0.h"
+#include "elements/QUADTH.h"
 using namespace nla3d;
 %}
 
@@ -266,8 +267,15 @@ MATSYM_EXTEND(3)
   nla3d::ElementTRUSS3& getElementTRUSS3(uint32 _en) {
     return $self->getElement<nla3d::ElementTRUSS3>(_en);
   }
-}
 
+  nla3d::ElementQUADTH& getElementQUADTH(uint32 _en) {
+    return $self->getElement<nla3d::ElementQUADTH>(_en);
+  }
+
+  nla3d::SurfaceLINETH& getElementSurfaceLINETH(uint32 _en) {
+    return $self->getElement<nla3d::SurfaceLINETH>(_en);
+  }
+}
 %include "PostProcessor.h"
 
 %ignore nla3d::VtkProcessor::registerResults;
@@ -344,4 +352,6 @@ namespace std {
 
 %include "elements/TRUSS3.h"
 %include "elements/TETRA0.h"
+%include "elements/isoparametric.h"
+%include "elements/QUADTH.h"
 
